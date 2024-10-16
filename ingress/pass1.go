@@ -2,11 +2,14 @@ package ingress
 
 import "time"
 
+// Algorithm architecture
+// Given an observation:
 type metric int
 type slope int
 
 type Profile interface {
 	Peak() bool
+	OffPeak() bool
 	ScaleUp() bool
 	ScaleDown() bool
 }
@@ -34,6 +37,10 @@ type rateLimitingObservation struct {
 
 	// Percentage of traffic that was constrained/rate limited
 	pctOfTraffic int
+}
+
+func (r *rateLimitingObservation) IsLimiting() bool {
+	return r.limit > 0
 }
 
 // What happens if the observation changes within the duration?
@@ -66,4 +73,20 @@ func shouldAct(observed, threshold metric, rateOfChange slope) bool {
 	}
 
 	return true
+}
+
+func action[T any](data observation[T], rateLimit rateLimitingObservation) int {
+	// if no change in observation, stay with current action which could be rate limited or not
+	if data.rateOfChange == 0 {
+		return 0
+	}
+	// if the observed metric is decreasing, then reduce the rate limiting if applicable
+	if data.rateOfChange < 0 {
+		if rateLimit.IsLimiting() {
+			return -1
+		}
+		return 0
+	}
+
+	return 0
 }
