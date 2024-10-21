@@ -12,9 +12,12 @@ type facts struct {
 }
 
 type observed struct {
-	saturation   int // Percentage of observed metric/threshold metric
-	rateOfChange int // Rate of change of metric
-	rateLimited  int // Percentage of traffic currently being limited
+	attention  time.Duration
+	saturation int // Percentage metric/threshold
+	limited    int // Percentage of limited traffic
+
+	metricSlope  int // Metric slope
+	trafficSlope int // Traffic slope
 }
 
 // Need to know the rate of change of the profile window for a given time.
