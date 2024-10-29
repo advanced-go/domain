@@ -13,12 +13,13 @@ type facts struct {
 	rateLimiting int           // Percentage of traffic that is currently being rate limited
 }
 
+// The frame needs to return if there should be a change and the percentage change to affected
+// traffic. The percentage change can be negative or positive
 type observed struct {
 	metricSaturation   int    // Percentage = metric value/metric threshold
 	affectedSaturation int    // Percentage = affected traffic/total traffic
-	gradient           int    // Percentage = rise/run also slope
-	traffic            string // Traffic : peak,off-peak,scale-up,scale-down
-	//attention       traffic.Measure // Durations
+	gradient           int    // Percentage = rise/run, slope
+	trafficLevel       string // Traffic level : peak,off-peak,scale-up,scale-down
 }
 
 // Need to know the rate of change of the profile window for a given time.
