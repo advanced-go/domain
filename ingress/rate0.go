@@ -1,7 +1,6 @@
 package ingress
 
 import (
-	"github.com/advanced-go/domain/traffic"
 	"time"
 )
 
@@ -15,11 +14,11 @@ type facts struct {
 }
 
 type observed struct {
-	metricValue     int             // Value
-	metricThreshold int             // Threshold
-	metricSlope     int             // Slope
-	level           string          // Traffic level: peak,off-peak,scale-up,scale-down
-	attention       traffic.Measure // Durations
+	metricSaturation   int    // Percentage = metric value/metric threshold
+	affectedSaturation int    // Percentage = affected traffic/total traffic
+	gradient           int    // Percentage = rise/run also slope
+	traffic            string // Traffic : peak,off-peak,scale-up,scale-down
+	//attention       traffic.Measure // Durations
 }
 
 // Need to know the rate of change of the profile window for a given time.
